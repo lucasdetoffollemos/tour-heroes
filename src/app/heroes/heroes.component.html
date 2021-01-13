@@ -13,12 +13,9 @@
 				</ion-col>
 			</ion-row>
 		</ion-grid>
+
+		<app-hero-detail [hero] = "selectedHero"></app-hero-detail>
 	
-	<h2>{{selectedHero.name | uppercase}} Details</h2>
-	<div><span>id: </span>{{selectedHero.id}}</div>
-	<div>
-		<label>name:
-			<input placeholder="name" [(ngModel)] = 'selectedHero.name'/>
-		</label>
-	</div>
+	
 </div>
+

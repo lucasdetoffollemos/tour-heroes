@@ -4,9 +4,14 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 import { HeroesComponent } from '../heroes/heroes.component'
+import {HeroDetailComponent} from '../hero-detail/hero-detail.component';
+import {MessagesComponent} from '../messages/messages.component';
+
 
 
 import { HomePageRoutingModule } from './home-routing.module';
+
+
 
 
 @NgModule({
@@ -14,8 +19,8 @@ import { HomePageRoutingModule } from './home-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
   ],
-  declarations: [HomePage, HeroesComponent]
+  declarations: [HomePage, HeroesComponent, HeroDetailComponent, MessagesComponent]
 })
 export class HomePageModule {}
