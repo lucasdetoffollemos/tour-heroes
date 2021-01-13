@@ -8,7 +8,7 @@ import {MessageService} from '../services/message.service';
 
 
 @Component({
-  selector: 'app-heroes',
+  selector: 'app-component-heros',
   templateUrl: './heroes.component.html',
   styleUrls: ['./heroes.component.scss'],
 })
