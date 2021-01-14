@@ -9,7 +9,11 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import {HttpClientModule} from '@angular/common/http';
 //import {HeroDetailComponent} from './hero-detail/hero-detail.component';
+import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
+import { InMemoryDataService } from './services/in-memory-data.service';
+
 
 @NgModule({
   declarations: [
@@ -17,7 +21,20 @@ import { AppRoutingModule } from './app-routing.module';
   //HeroDetailComponent
   ],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule],
+  imports: [
+      BrowserModule, 
+      IonicModule.forRoot(), 
+      AppRoutingModule, 
+      FormsModule, 
+      HttpClientModule, 
+      // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
+      // and returns simulated server responses.
+      // Remove it when a real server is ready to receive requests
+      HttpClientInMemoryWebApiModule.forRoot(
+        InMemoryDataService, {dataEncapsulation: false}
+      )
+   ],
+
   providers: [
     StatusBar,
     SplashScreen,
