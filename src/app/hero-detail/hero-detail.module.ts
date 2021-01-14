@@ -8,7 +8,7 @@ import { HeroDetailPageRoutingModule } from './hero-detail-routing.module';
 
 import { HeroDetailPage } from './hero-detail.page';
 
-import {HeroDetailComponent} from './hero-detail.component'
+import {HeroDetailComponent} from './hero-detail.component';
 
 @NgModule({
   imports: [

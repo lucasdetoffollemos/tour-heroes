@@ -5,8 +5,10 @@
 				<ion-col sizeXm = "0" sizeMd = "4">
 				</ion-col>
 				<ion-col class = "heroes" sizeXs = "12" sizeMd = "4" >
-					<ion-item *ngFor="let hero of heroes" (click) = "onSelect(hero)" [class.selected]="hero === selectedHero" >
+					<ion-item *ngFor="let hero of heroes">
+						<a routerLink="/detail/{{hero.id}}">
 							<span class="badge">{{hero.id}}</span> {{hero.name}}
+						</a>
 					</ion-item>
 				</ion-col>
 				<ion-col sizeXs = "0" sizeMd = "4">
@@ -14,7 +16,7 @@
 			</ion-row>
 		</ion-grid>
 
-		<app-hero-detail [hero] = "selectedHero"></app-hero-detail>
+		<!--<app-hero-detail [hero] = "selectedHero"></app-hero-detail> !-->
 	
 	
 </div>
