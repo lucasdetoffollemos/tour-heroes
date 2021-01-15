@@ -10,6 +10,9 @@ import { DashboardPage } from './dashboard.page';
 
 import {DashboardComponent} from './dashboard.component';
 
+import {HeroSearchComponent} from '../hero-search/hero-search.component';
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -17,6 +20,6 @@ import {DashboardComponent} from './dashboard.component';
     IonicModule,
     DashboardPageRoutingModule
   ],
-  declarations: [DashboardPage, DashboardComponent]
+  declarations: [DashboardPage, DashboardComponent, HeroSearchComponent]
 })
 export class DashboardPageModule {}

@@ -1,0 +1,102 @@
+
+ Angular variable is not updating when I return to previous page.
+
+Hello, I'm doing the [Angular's Tour of Heroes](https://angular.io/tutorial/), but I have a problem with the [last topic](https://angular.io/tutorial/toh-pt6#update-heroes). When it is necessary to obtain a data from a simulated server, edit a hero's name and return 
+to the previous page, my hero continues to display the same name on that page. To resolve this I need to reload the page or navigate to another page and return so that the method for updating the variables is triggered again.
+
+I tried to use the [IonViewWillEnter()](https://ionicframework.com/docs/angular/lifecycle) method together with the function of loading users to try to force this loading the moment I return to the page, but it still didn't work.
+
+Using Ionic 5 and Angular 10.
+
+**hero.service.ts**
+```typescript
+updateHero(hero:Hero):Observable<any>{
+    return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
+      tap(_=>this.log(`updated hero id=${hero.id}`)),
+      catchError(this.handleError<any>('updateHero'))
+    );
+}
+
+getHeroes(): Observable<Hero[]>{
+  	//Send the message after fetching the heroes this.messageService.add('HeroService: fetched heroes');
+
+  	return this.http.get<Hero[]>(this.heroesUrl)
+    .pipe(
+        tap(_ => this.log('fetched heroes')),
+        catchError(this.handleError<Hero[]>('getHeroes', []))
+      );
+  }
+```
+
+**hero.detail.component.ts**
+```typescript
+hero:Hero;
+
+  ngOnInit() {
+  	this.getHero();
+  }
+
+  getHero(): void{
+  	const id = +this.route.snapshot.paramMap.get('id');
+  	this.heroService.getHero(id).subscribe(hero => this.hero = hero);
+  }
+
+  goBack(): void{
+  	this.location.back();
+  }
+
+  save(): void{
+    this.heroService.updateHero(this.hero)
+    .subscribe(() => this.goBack());
+  }
+```
+
+
+**hero.detail.component.html**
+```html
+<div *ngIf="hero">
+
+  <h2>{{hero.name | uppercase}} Details</h2>
+  <div><span>id: </span>{{hero.id}}</div>
+  <div>
+    <label>name:
+      <input [(ngModel)]="hero.name" placeholder="name"/>
+    </label>
+    
+    <button (click)="goBack()">go back</button>
+    <button (click)="save()">Save</button>
+  </div>
+
+</div>
+```
+
+Here, is where the variable needs to appear updated
+
+**dashboard.component.html**
+```html
+<h3>Top Heroes</h3>
+<div class="grid grid-pad">
+	<a *ngFor="let hero of heroes" class="col-1-4" routerLink ="/detail/{{hero.id}}">
+		<div class= "module hero">
+			<h4>{{hero.name}}</h4>
+		</div>
+	</a>
+</div>
+```
+
+**dashboard.component.ts**
+```typescript
+heroes:Hero[] = [];
+
+
+  ngOnInit() {
+  	this.getHeroes();
+  } 
+  
+  getHeroes():void{
+  	this.heroService.getHeroes().subscribe(heroes =>this.heroes = heroes.slice(1,5));
+  }
+```
+
+
+

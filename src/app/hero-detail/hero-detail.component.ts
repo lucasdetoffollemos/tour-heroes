@@ -6,11 +6,6 @@ import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 import {HeroService} from '../services/hero.service';
 
-
-
-
-
-
 @Component({
   selector: 'app-hero-detail-component',
   templateUrl: './hero-detail.component.html',
@@ -18,7 +13,7 @@ import {HeroService} from '../services/hero.service';
 })
 export class HeroDetailComponent implements OnInit {
 
-  @Input() hero:Hero;
+  hero:Hero;
   
   constructor(
   	private route: ActivatedRoute,
@@ -36,11 +31,11 @@ export class HeroDetailComponent implements OnInit {
   	this.heroService.getHero(id).subscribe(hero => this.hero = hero);
   }
 
-  goBack(){
+  goBack(): void{
   	this.location.back();
   }
 
-  save(){
+  save(): void{
     this.heroService.updateHero(this.hero)
     .subscribe(() => this.goBack());
   }
