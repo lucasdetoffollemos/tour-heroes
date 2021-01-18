@@ -1,0 +1,59 @@
+Ok, thanks for the help, about the names I just followed the tutorial, but i think it´s important for the others that are seeing this, and I will improve my names in the others projects.
+
+I see a little about the unsubscribe and the destruction, and i use this to unsubscribe my subscriptions, but I dont known if is a correct way.
+
+About the tap operator, I don´t know much, and again I followed the steps of the tutorial, but thanks for the notice, i will need study a lot of Rx.
+
+So now my problem about the update is resolved, here is my code:
+**hero.service.ts**
+```
+typescript
+private heroes$ = new Subject<Hero[]>();
+
+getHeroes(): Observable<Hero[]>{
+	return this.http.get<Hero[]>(this.heroesUrl)
+  .pipe(
+      tap(res =>{
+        this.log('fetched heroes');
+        this.heroes$.next(res);
+      }),
+      catchError(this.handleError<Hero[]>('getHeroes', []))
+    );
+}
+
+updateHero(hero:Hero):Observable<any>{
+  return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
+    tap(res =>{
+      this.log(`updated hero id=${hero.id}`);
+      this.getHeroes().subscribe(heroes => this.heroes$.next(heroes));
+    }),
+    catchError(this.handleError<any>('updateHero'))
+   );
+}
+
+getHero$():Observable<Hero[]>{
+  return this.heroes$;
+}
+```
+**dashboard.component.ts**
+```
+typescript
+ private getHeroes$Subscription: Subscription;
+ private getHeroesSubscription: Subscription;
+
+ ngOnInit() {
+   this.getHeroes$Subscription = this.heroService.getHero$().subscribe(heroes => {
+     console.log('Heroes changed: ', heroes)
+     this.heroes = heroes.slice(1,5)
+   })
+   
+   this.getHeroesSubscription = this.heroService.getHeroes().subscribe(heroes =>this.heroes=heroes.slice(1,5));  
+ } 
+ 
+ ngOnDestroy(){
+   this.getHeroes$Subscription.unsubscribe();
+   this.getHeroesSubscription.unsubscribe();
+ }
+```
+
+

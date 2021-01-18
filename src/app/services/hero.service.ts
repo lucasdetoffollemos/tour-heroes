@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Hero } from '../hero-interface/hero-interface.component';
 import { HEROES } from '../mock-heroes/mock-heroes.component';
 import {MessageService} from './message.service';
-import {Observable, of} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, map, tap} from 'rxjs/operators';
 
@@ -14,6 +14,8 @@ export class HeroService {
 
 //URL to web api
   private heroesUrl = 'api/heroes';  
+ //public heroes$ = new BehaviorSubject<Hero[] | null>(null);
+  private heroes$ = new Subject<Hero[]>();
   
  httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -21,7 +23,7 @@ export class HeroService {
 
   constructor(
     private http: HttpClient,
-    private messageService: MessageService
+    private messageService: MessageService,
     ) { }
 
   getHeroes(): Observable<Hero[]>{
@@ -29,7 +31,10 @@ export class HeroService {
 
   	return this.http.get<Hero[]>(this.heroesUrl)
     .pipe(
-        tap(_ => this.log('fetched heroes')),
+        tap(res =>{
+          this.log('fetched heroes');
+          this.heroes$.next(res);
+        }),
         catchError(this.handleError<Hero[]>('getHeroes', []))
       );
   }
@@ -82,7 +87,10 @@ export class HeroService {
    /** PUT: update the hero on the server */
    updateHero(hero:Hero):Observable<any>{
      return this.http.put(this.heroesUrl, hero, this.httpOptions).pipe(
-       tap(_=>this.log(`updated hero id=${hero.id}`)),
+       tap(res =>{
+         this.log(`updated hero id=${hero.id}`);
+         this.getHeroes().subscribe(heroes => this.heroes$.next(heroes));
+       }),
        catchError(this.handleError<any>('updateHero'))
       );
    }
@@ -108,5 +116,9 @@ export class HeroService {
        tap(_ => this.log(`deleted hero id=${id}`)),
        catchError(this.handleError<Hero>('deleteHero'))
        );
+   }
+
+   getHero$():Observable<Hero[]>{
+     return this.heroes$;
    }
 }

@@ -5,6 +5,7 @@ import { Component, OnInit} from '@angular/core';
 import {Hero} from '../hero-interface/hero-interface.component';
 import {HeroService} from '../services/hero.service';
 import {MessageService} from '../services/message.service';
+import {Subscription} from 'rxjs';
 
 
 @Component({
@@ -17,6 +18,9 @@ export class HeroesComponent implements OnInit {
   public heroes: Hero[];
   public hero:Hero;
   public selectedHero: Hero;
+  private getHero$Subscription: Subscription;
+  private getHeroesSubscription: Subscription;
+
 
 
   constructor(private heroService: HeroService, private messageService:MessageService) { }
@@ -37,8 +41,10 @@ export class HeroesComponent implements OnInit {
   }
 
   getHeroes(): void{
-    this.heroService.getHeroes()
+    this.getHero$Subscription = this.heroService.getHero$()
     .subscribe(heroes =>this.heroes = heroes);
+
+    this.getHeroesSubscription = this.heroService.getHeroes().subscribe();
   }
 
   add(name:string){
@@ -54,4 +60,10 @@ export class HeroesComponent implements OnInit {
     this.heroes = this.heroes.filter(h=> h !== hero);
     this.heroService.deleteHero(hero).subscribe();
   }
+
+  ngOnDestroy(){
+    this.getHero$Subscription.unsubscribe();
+    this.getHeroesSubscription.unsubscribe();
+  }
+
 }
